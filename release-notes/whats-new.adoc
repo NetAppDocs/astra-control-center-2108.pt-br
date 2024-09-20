@@ -1,0 +1,38 @@
+---
+sidebar: sidebar 
+permalink: release-notes/whats-new.html 
+keywords: 'what"s new, bugs, bug fixes, new features, enhancements' 
+summary: O NetApp atualiza periodicamente o Centro de Controle Astra para oferecer novos recursos, melhorias e correções de bugs. 
+---
+= Conteúdo desta versão do Astra Control Center
+:hardbreaks:
+:allow-uri-read: 
+:icons: font
+:imagesdir: ../media/release-notes/
+
+
+Temos o prazer de anunciar o lançamento do Astra Control Center.
+
+
+
+== 5 de agosto de 2021 (21,08)
+
+Lançamento inicial do Astra Control Center.
+
+* link:../concepts/intro.html["O que é"]
+* link:../concepts/architecture.html["Compreender a arquitetura e os componentes"]
+* link:../get-started/requirements.html["O que é preciso para começar"]
+* link:../get-started/install_acc.html["Instale"] e link:../get-started/setup_overview.html["configuração"]
+* link:../use/manage-apps.html["Gerenciar"] e link:../use/protect-apps.html["proteger"] aplicações
+* link:../use/manage-buckets.html["Gerenciar buckets"] e link:../use/manage-backend.html["back-ends de armazenamento"]
+* link:../use/manage-users.html["Gerenciar contas"]
+* link:../rest-api/api-intro.html["Automatize com API"]
+
+
+
+
+== Encontre mais informações
+
+* link:../release-notes/known-issues.html["Problemas conhecidos para esta versão"]
+* link:../release-notes/known-limitations.html["Limitações conhecidas para esta versão"]
+

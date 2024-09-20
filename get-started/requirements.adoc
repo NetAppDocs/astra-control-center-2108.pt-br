@@ -1,0 +1,147 @@
+---
+sidebar: sidebar 
+permalink: get-started/requirements.html 
+keywords: what are astra kubernetes requirements, astra control requirements, astra supported versions, apps, supported apps, mariadb, mysql, postgres, kubernetes version, ubuntu, image type, networking 
+summary: Comece a usar o Astra Control Center verificando o suporte para clusters, aplicações e navegador da Web do Kubernetes. 
+---
+= Requisitos do Astra Control Center
+:hardbreaks:
+:allow-uri-read: 
+:icons: font
+:imagesdir: ../media/get-started/
+
+
+Comece verificando o suporte para clusters, aplicativos, licenças e navegador da Web do Kubernetes.
+
+
+
+== Requisitos gerais do cluster do Kubernetes
+
+Um cluster de Kubernetes precisa atender aos requisitos gerais a seguir para que você possa descobri-lo e gerenciá-lo no Astra Control Center.
+
+* *Registro de imagem*: Você deve ter um Registro de imagem Docker privado existente para o qual você pode enviar imagens de compilação do Astra Control Center. Tem de ter a URL do registo de imagens onde irá carregar as imagens e tem de ter marcado as imagens para o registo de contentores privado.
+* *Configuração de storage Trident / ONTAP*: O Astra Control Center requer que o Trident versão 21,01 ou 21,04 já esteja instalado e configurado para funcionar com o NetApp ONTAP versão 9,5 ou mais recente como o back-end de storage. O Astra Control Center exige que uma classe de storage seja criada e definida como a classe de storage padrão. O Astra Control Center é compatível com os seguintes drivers ONTAP fornecidos pelo Trident:
++
+** ONTAP-nas
+** ONTAP-nas-FlexGroup
+** ONTAP-san
+** ONTAP-são-economia
+
+
+
+
+Se você está planejando gerenciar o cluster do Kubernetes a partir do Astra Control Center e usar o cluster para hospedar a instalação do Astra Control Center, o cluster terá os seguintes requisitos adicionais:
+
+* A versão mais recente do Kubernetes https://kubernetes-csi.github.io/docs/snapshot-controller.html["componente do controlador snapshot"^] é instalada
+* Um Trident https://netapp-trident.readthedocs.io/en/latest/kubernetes/concepts/objects.html?highlight=VolumeSnapshotClass#kubernetes-volumesnapshotclass-objects["volumesnapshotclass objeto"^] foi definido por um administrador
+* Existe uma classe de storage padrão do Kubernetes no cluster
+* Pelo menos uma classe de armazenamento está configurada para usar o Trident
+* Um método para apontar o FQDN do Astra Control Center para o endereço IP externo do serviço Astra Control Center
+
+
+
+
+=== Clusters OpenShift
+
+O Astra Control Center requer um cluster Red Hat OpenShift Container Platform 4.6.8 ou 4,7 que tenha classes de storage Trident com suporte do ONTAP 9.5 ou mais recente, com os seguintes atributos:
+
+* Pelo menos 300GB GB de capacidade de armazenamento ONTAP disponível
+* 3 nós de controladora com 4 núcleos de CPU, 16GB GB de RAM e 120GB GB de storage disponível cada
+* 3 nós de trabalho com pelo menos 12 núcleos de CPU, 32GB GB de RAM e 50GB GB de armazenamento disponível cada
+* Kubernetes versão 1,19 ou 1,20
+* Tipo de serviço "LoadBalancer" disponível para o tráfego de entrada a ser enviado para serviços no cluster OpenShift
+* Um método para apontar o FQDN do Astra Control Center para o endereço IP balanceado de carga
+
+
+
+NOTE: Esses requisitos mínimos presumem que o Astra Control Center é a única aplicação em execução no cluster OpenShift. Se o cluster estiver executando aplicações adicionais, você precisará ajustar esses requisitos mínimos de acordo.
+
+Certifique-se de que seu cluster atenda aos requisitos mínimos e que você siga as práticas recomendadas do Kubernetes para que o Astra Control Center fique altamente disponível no cluster do Kubernetes.
+
+
+NOTE: OpenShift 4,8 não é suportado.
+
+[NOTE]
+====
+Durante a clonagem de aplicativos, o Astra Control Center precisa permitir que o OpenShift monte volumes e altere a propriedade dos arquivos. Devido a isso, o ONTAP precisa ser configurado para permitir que operações de volume sejam concluídas com sucesso usando os seguintes comandos:
+
+. `export-policy rule modify -vserver svm0 -policyname default -ruleindex 1 -superuser sys`
+. `export-policy rule modify -policyname default -ruleindex 1 -anon 65534`
+
+
+====
+
+NOTE: Se você pretende adicionar um segundo cluster do OpenShift 4,6 ou 4,7 como um recurso de computação gerenciado, você precisa garantir que o recurso Snapshot de volume do Trident esteja ativado. Consulte o Trident oficial https://netapp-trident.readthedocs.io/en/stable-v21.04/kubernetes/operations/tasks/volumes/snapshots.html?highlight=volumesnapshot#on-demand-volume-snapshots["instruções"^] para ativar e testar instantâneos de volume com o Trident.
+
+
+
+=== Requisitos de gerenciamento de aplicativos
+
+O Astra Control Center tem os seguintes requisitos de gerenciamento de aplicações:
+
+* *Licenciamento*: Você precisa de uma licença do Astra Control Center para gerenciar aplicativos usando o Astra Control Center.
+* *Helm 3*: Se você usar o Helm para implantar aplicativos, o Astra Control Center precisará do Helm versão 3. O gerenciamento e clonagem de aplicativos implantados com o Helm 3 (ou atualizados do Helm 2 para o Helm 3) são totalmente compatíveis. As aplicações implementadas com o Helm 2 não são suportadas.
+* *Gerenciamento do operador*: O Astra Control Center não oferece suporte a aplicativos implantados com operadores habilitados para o Operator Lifecycle Manager (OLM) ou operadores com escopo de cluster.
+
+
+
+
+== Acesso à internet
+
+Você deve determinar se você tem acesso externo à Internet. Se não o fizer, algumas funcionalidades poderão ser limitadas, como receber dados de monitorização e métricas da NetApp Cloud Insights, ou enviar pacotes de suporte para o site de suporte da NetApp.
+
+
+
+== Licença
+
+O Astra Control Center requer uma licença do Astra Control Center para todos os recursos. Obtenha uma licença de avaliação ou uma licença completa da NetApp. Sem uma licença, você não poderá:
+
+* Definir aplicações personalizadas
+* Criar snapshots ou clones de aplicações existentes
+* Configurar políticas de proteção de dados
+
+
+Se você quiser experimentar o Astra Control Center, você pode link:setup_overview.html#add-a-full-or-evaluation-license["use uma licença de avaliação de 90 dias"].
+
+
+
+== Tipo de serviço "LoadBalancer" para clusters do Kubernetes no local
+
+O Astra Control Center usa um serviço do tipo "LoadBalancer" (svc/traefik no namespace Astra Control Center) e exige que seja atribuído um endereço IP externo acessível. Para clusters OpenShift locais, você pode usar https://docs.netapp.com/us-en/netapp-solutions/containers/rh-os-n_LB_MetalLB.html#installing-the-metallb-load-balancer["MetalLB"^] para atribuir automaticamente um endereço IP externo ao serviço. Na configuração do servidor DNS interno, você deve apontar o nome DNS escolhido para o Astra Control Center para o endereço IP com balanceamento de carga.
+
+
+
+== Requisitos de rede
+
+O cluster que hospeda o Astra Control Center se comunica usando as seguintes portas TCP. Você deve garantir que essas portas sejam permitidas por meio de firewalls e configurar firewalls para permitir qualquer tráfego de saída HTTPS proveniente da rede Astra. Algumas portas exigem conectividade de ambos os lados entre o cluster que hospeda o Astra Control Center e cada cluster gerenciado (observado quando aplicável).
+
+|===
+| Produto | Porta | Protocolo | Direção | Finalidade 
+
+
+| Astra Control Center | 443 | HTTPS | Entrada | Acesso de IU / API - garanta que essa porta esteja aberta de ambas as maneiras entre o cluster que hospeda o Astra Control Center e cada cluster gerenciado 
+
+
+| Astra Control Center | 9090 | HTTPS  a| 
+* Ingresso (para cluster que hospeda o Astra Control Center)
+* Saída (porta aleatória do endereço IP do nó de cada nó de trabalho de cada cluster gerenciado)
+
+| Dados de métricas para o consumidor de métricas - garanta que cada cluster gerenciado possa acessar essa porta no cluster que hospeda o Astra Control Center 
+
+
+| Trident | 34571 | HTTPS | Entrada | Comunicação do pod do nó 
+
+
+| Trident | 9220 | HTTP | Entrada | Endpoint de métricas 
+|===
+
+
+== Navegadores da Web suportados
+
+O Astra Control Center suporta versões recentes do Firefox, Safari e Chrome com uma resolução mínima de 1280 x 720.
+
+
+
+== O que vem a seguir
+
+Veja a link:quick-start.html["início rápido"] visão geral.
